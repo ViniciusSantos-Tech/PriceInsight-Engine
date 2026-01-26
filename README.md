@@ -3,7 +3,7 @@
 </p>
 
 <h3 align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?color=00FFFF&center=true&vCenter=true&width=600&lines=Automated+Price+Intelligence;AI-Powered+Data+Parsing+(Gemma+3);PostgreSQL+%2B+Streamlit+Visualization;The+Future+of+Market+Analysis" />
+  <img src="https://readme-typing-svg.herokuapp.com?color=00FFFF&center=true&vCenter=true&width=600&lines=Automated+Price+Intelligence;AI-Powered+Data+Parsing+(Gemma+3);PostgreSQL+%2B+Streamlit+Visualization;Advanced+Data+Engineering+Pipeline" />
 </h3>
 
 <p align="center">
@@ -11,16 +11,29 @@
 </p>
 
 ## ⚡ The Project
-**PriceInsight-Engine** não é apenas um script, é um organismo completo de monitoramento de mercado. Ele caça dados brutos, utiliza **Inteligência Artificial local** para entender preços e transforma tudo em gráficos de tendência brutais.
+**PriceInsight-Engine** is a sophisticated data pipeline designed to monitor market volatility. It bridges the gap between unstructured web data and structured business intelligence by leveraging **Local LLMs** to bypass traditional scraping limitations.
 
 ---
 
-## 📸 Dashboard Live Preview
+## 📸 System Interface
 <p align="center">
   <img src="assets/streamlitphoto1.png" alt="Price Dashboard" width="900px" style="border-radius: 15px; border: 2px solid #00FFFF;">
   <br>
-  <img src="https://img.shields.io/badge/Status-Data%20Flowing-00FFFF?style=for-the-badge&logo=rocket" />
+  <img src="https://img.shields.io/badge/Pipeline-Active-00FFFF?style=for-the-badge&logo=rocket" />
 </p>
+
+---
+
+## 🏗️ System Architecture
+The engine operates on a 4-layer architecture:
+
+1.  **Ingestion Layer:** Custom scrapers extract raw HTML/Text from e-commerce targets.
+2.  **Processing Layer:** **Ollama (Gemma 3)** acts as a semantic parser, converting messy text into validated JSON structures.
+3.  **Storage Layer:** A **PostgreSQL** instance manages historical data, ensuring ACID compliance and relational integrity.
+4.  **Presentation Layer:** A **Streamlit** dashboard provides real-time analytics with spline-interpolated trend lines.
+
+
+
 ---
 
 ## 🧠 Intelligence Stack
@@ -29,33 +42,21 @@
   <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
   <img src="https://img.shields.io/badge/Ollama-Gemma3-black?style=for-the-badge&logo=ollama&logoColor=white" />
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/SQLAlchemy-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white" />
   <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" />
 </p>
 
 ---
 
-## 🛠️ Operational Flow
+## 🛠️ Installation & Environment Setup
 
-<p align="left">
-  🔹 <b>Data Extraction:</b> Scraper de alta precisão via BeautifulSoup/Selenium.<br>
-  🔹 <b>AI Inference:</b> Processamento de linguagem natural com Gemma 3 para extração de JSON limpo.<br>
-  🔹 <b>Persistent Storage:</b> Histórico completo armazenado em PostgreSQL via SQLAlchemy.<br>
-  🔹 <b>Deep Analytics:</b> Visualização de curvas spline e correlação de moedas em tempo real.
-</p>
+### 1. Prerequisites
+- Python 3.10+
+- PostgreSQL installed and running
+- Ollama with `gemma3:4b` model
 
----
-
-## 🚀 Setup & Launch
-
+### 2. Clone & Install
 ```bash
-# Clone o motor
-git clone [https://github.com/seu-usuario/PriceInsight-Engine.git](https://github.com/seu-usuario/PriceInsight-Engine.git)
-
-# Instale os módulos
+git clone [https://github.com/your-username/PriceInsight-Engine.git](https://github.com/your-username/PriceInsight-Engine.git)
+cd PriceInsight-Engine
 pip install -r requirements.txt
-
-# Configure suas credenciais (Local Only)
-echo "DATABASE_URL=postgresql://user:pass@localhost:5432/db" > .env
-
-# Inicie o Dashboard
-streamlit run app.py
