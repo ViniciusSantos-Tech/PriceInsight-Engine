@@ -1,9 +1,15 @@
+import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, String, Numeric, DateTime, Integer
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime, timezone
 
+load_dotenv()
+URL_BANK = os.getenv("DATABASE_URL")
+if not URL_BANK:
+    raise ValueError("DATABASE_URL Not found. Check the file .env")
+
 Base = declarative_base()
-URL_BANK = "postgresql://postgres:211508@localhost:5432/postgres"
 
 class Tabel(Base):
     __tablename__ = 'History'
@@ -18,9 +24,3 @@ Base.metadata.create_all(engine)
 
 def get_session():
     return Session()
-
-
-
-
-
-
