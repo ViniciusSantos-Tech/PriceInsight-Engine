@@ -1,11 +1,8 @@
-
 sqlalchemy
 psycopg2-binary
 python-dotenv
 ollama
-beautifulsoup4
 selenium
-requests
 webdriver-manager
 streamlit
 pandas
