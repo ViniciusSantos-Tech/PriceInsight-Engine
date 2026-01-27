@@ -8,8 +8,13 @@ st.title("Monitor Monitoring")
 
 def load_dates():
     query = 'SELECT "Id", "Product", "Price", "Date" FROM public."History" ORDER BY "Date" ASC'
-    df = pd.read_sql(query, engine)
-    return df
+    try:
+        with engine.connect() as connection:
+            df = pd.read_sql(query, connection)
+            return df
+    except Exception as e:
+        st.error(f"Error to connect database: {e}")
+        return pd.DataFrame()
 
 df = load_dates()
 
@@ -48,3 +53,4 @@ if not df.empty:
 
 else:
     st.warning("Database is empty")
+
