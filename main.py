@@ -11,8 +11,9 @@ dics_dates = app_ia.format_response(ia_response)
 
 
 app_crud = Crud()
-crud_response = app_crud.add_history(Product="Cellphone", Price=dics_dates["Preco"])
+crud_response = app_crud.add_history(Product="Cellphone", Price=dics_dates["Price"])
 print(crud_response)
+
 
 
 
