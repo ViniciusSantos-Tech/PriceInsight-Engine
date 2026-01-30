@@ -1,33 +1,39 @@
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
+import requests
+from bs4 import BeautifulSoup
+from ai_processor import IA
+import time
+import random
+app = IA()
+
 
 class Scrap():
-    def __init__(self):  
-        self.options = webdriver.ChromeOptions()
-        self.options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-        self.options.add_argument("--disable-blink-features=AutomationControlled")
-        self.options.add_argument("--headless=new")
-        self.options.add_argument("--no-sandbox")
-        self.options.add_argument("--disable-dev-shm-usage")
-        self.url = "https://www.amazon.com.br/ZOTAC-Gaming-GeForce-Extreme-Infinity/dp/B0F135FPK3/ref=sr_1_2?dib=eyJ2IjoiMSJ9.moQMh3L63lwyuFpixU-NuoXgJM8vxeIz9TrBkWsOrf3zaZd_HmSocJ8w7pEqfoXiqtE3ecDCVtJ8XONsSSHC7NQj4uZzdQeqfIM6jnZiVCQzL3GMPC8HJlVaJ3OP67g-F3EWPmqsZUS0MOyppKkb9Kb1Gro9bBqKtNITR_avjvXquHHf1D_tjsSLe1ASwaYEFUP8p-F9JkttlEdLP_2bOHf9nSFhRFZ_F0oMKuEgyvNquLocp_PznCpDvUAWg6qmXtEGDi98XMOg3lmUoHWh09MLzOwLx4kGuYc6Lwe_pKw.68qg9e6K0Ic9SscAaZEQxiDhYVfkjlWseal7uoUCS4g&dib_tag=se&keywords=rtx+5090&qid=1769525196&sr=8-2&ufe=app_do%3Aamzn1.fos.a492fd4a-f54d-4e8d-8c31-35e0a04ce61e"
-
+    def __init__(self):
+        self.url = "https://www.magazineluiza.com.br/placa-de-video-rtx-5090-aorus-master-ice-32g-gigabyte-nvidia-geforce-32gb-gddr7-512bits-rgb-dlss-ray-tracing-9vn5090ami-00-g10/p/cb0969d93f/in/pcvd/?seller_id=kabum"
+        self.headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+    "Cache-Control": "max-age=0",
+     }
     def Scraping(self):
-        driver = webdriver.Chrome(options=self.options)
         try:
-            driver.get(self.url)
+            time.sleep(15)
+            r = requests.get(self.url, headers=self.headers, timeout=10)
+            if r.status_code == 200:
+                soup = BeautifulSoup(r.text, 'html.parser')
+                for trash in soup(["script", "style", "nav", "footer", "header"]):
+                    trash.decompose()
 
-            wait = WebDriverWait(driver, 15).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "a-price-whole"))
-            )
-            price_container = driver.find_element(By.CLASS_NAME, "a-price-whole").text
-            
-            return f"Data: {price_container}, status: 'Sucess'"
-            
-        except Exception as e:
-
-            body_error = driver.find_element(By.TAG_NAME, "body").text[:500]
-            return f"Element failure. Content: {body_error}"
-        finally:
-            driver.quit()
+                clean_text = soup.get_text(separator=' ', strip=True)
+                return clean_text
+            else:
+                return r.status_code
+        except: 
+            return "unknown error"
