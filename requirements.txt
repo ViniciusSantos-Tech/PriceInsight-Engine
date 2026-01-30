@@ -3,8 +3,9 @@ psycopg2-binary
 python-dotenv
 ollama
 selenium
-webdriver-manager
 streamlit
 pandas
 plotly
 groq
+beautifulsoup4
+requests
