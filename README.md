@@ -1,62 +1,59 @@
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00FFFF,100:000000&height=220&section=header&text=PriceInsight%20Engine&fontSize=70&fontColor=ffffff&animation=fadeIn" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:4A90E2,100:000000&height=180&section=header&text=PriceInsight-Engine&fontSize=50&fontColor=ffffff" />
 </p>
 
-<h3 align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?color=00FFFF&center=true&vCenter=true&width=600&lines=Automated+Price+Intelligence;AI-Powered+Data+Parsing+(Gemma+3);PostgreSQL+%2B+Streamlit+Visualization;Advanced+Data+Engineering+Pipeline" />
-</h3>
+> [!WARNING]
+> This project is a functional study of Data ETL (Extract, Transform, Load) pipelines using LLMs for data cleaning.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" width="100%" />
-</p>
+## 📋 The Project
+**PriceInsight-Engine** is a tool built to solve a specific problem: manual price monitoring of high-end hardware. Instead of dealing with fragile Regex patterns to parse HTML, this engine uses **Generative AI** to interpret web data and extract pricing information reliably.
 
-## ⚡ The Project
-**PriceInsight-Engine** is a sophisticated data pipeline designed to monitor market volatility. It bridges the gap between unstructured web data and structured business intelligence by leveraging **Local LLMs** to bypass traditional scraping limitations.
+The project demonstrates how to connect a Python scraper to a cloud database (PostgreSQL) and visualize historical trends in a web dashboard.
 
 ---
 
-## 📸 System Interface
+## 🏗️ Architecture & Logic
+I designed this pipeline to be modular. Each file has a single responsibility:
+
+### 1. Extraction (Scraping Layer)
+The script targets e-commerce platforms using the `Requests` library. 
+* **Challenge:** Anti-bot mechanisms.
+* **Solution:** Implementation of browser-mimicking headers to ensure the HTML is returned instead of a `403 Forbidden` error.
+
+### 2. Transformation (AI Semantic Layer)
+This is the core of the project. Instead of searching for a specific HTML tag that might change tomorrow, the raw text is sent to the **Llama-3.3-70b** model via **Groq**.
+* **Prompt Engineering:** The AI is instructed to ignore installment prices and "from/to" traps, returning only the raw numeric value for cash payments.
+* **Data Sanitization:** The engine ensures the output is a clean JSON, ready for database insertion without further string manipulation.
+
+### 3. Storage (Persistence Layer)
+Data is stored in a **PostgreSQL** database (hosted on Railway).
+* **ORM:** I used **SQLAlchemy** to handle the database schema and sessions.
+* **Schema:** The `History` table tracks the product name, the price (as a cleaned string for safety), and an automatic UTC timestamp.
+
+### 4. Presentation (Analytics Layer)
+A **Streamlit** dashboard provides the interface.
+* It performs SQL queries to fetch historical data.
+* Uses **Pandas** for on-the-fly data type conversion.
+* Renders a **Plotly** spline chart to show price volatility over time.
+
+## 🟦 System Interface
 <p align="center">
   <img src="assents/streamlitphoto1.png" alt="Price Dashboard" width="900px" style="border-radius: 15px; border: 2px solid #00FFFF;">
   <br>
   <img src="https://img.shields.io/badge/Pipeline-Active-00FFFF?style=for-the-badge&logo=rocket" />
 </p>
 
----
-
-## 🏗️ System Architecture
-The engine operates on a 4-layer architecture:
-
-1.  **Ingestion Layer:** Custom scrapers extract raw HTML/Text from e-commerce targets.
-2.  **Processing Layer:** **Ollama (Gemma 3)** acts as a semantic parser, converting messy text into validated JSON structures.
-3.  **Storage Layer:** A **PostgreSQL** instance manages historical data, ensuring ACID compliance and relational integrity.
-4.  **Presentation Layer:** A **Streamlit** dashboard provides real-time analytics with spline-interpolated trend lines.
-
-
+## 🛠️ Technical Stack
+* **Language:** Python 3.10+
+* **AI:** Groq API (Llama 3.3 model)
+* **Scraping:** BeautifulSoup4 & Requests
+* **Database:** PostgreSQL & SQLAlchemy ORM
+* **Frontend:** Streamlit & Plotly
 
 ---
 
-## 🧠 Intelligence Stack
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Ollama-Gemma3-black?style=for-the-badge&logo=ollama&logoColor=white" />
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/SQLAlchemy-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white" />
-  <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" />
-</p>
-
----
-
-## 🛠️ Installation & Environment Setup
-
-### 1. Prerequisites
-- Python 3.10+
-- PostgreSQL installed and running
-- Ollama with `gemma3:4b` model
-
-### 2. Clone & Install
-```bash
-git clone [https://github.com/your-username/PriceInsight-Engine.git](https://github.com/your-username/PriceInsight-Engine.git)
-cd PriceInsight-Engine
-pip install -r requirements.txt
+## 🟦🔵​ Environment Setup
+To run this locally, you need a `.env` file with:
+```env
+GROQ_API_KEY=your_api_key
+DATABASE_URL=your_postgresql_url
