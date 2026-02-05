@@ -25,7 +25,6 @@ class IA():
 
             Data: {raw_data}
             """
-            
             completion = self.client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}]
@@ -34,10 +33,12 @@ class IA():
         except Exception as e:
             return False, f"Error: {e}", ""
     
-
     def format_response(self, response: str) -> dict:
         try:
             cleaned = response.replace("```json", "").replace("```", "").strip()
-            return True, "sucess", json.loads(cleaned)
-        except:
-            return False, "Error!", {"Price": "0"}
+            data = json.loads(cleaned)
+            if isinstance(data, list):
+                data = data[:5]
+            return True, "sucess", data
+        except Exception as e:
+            return False, f"Error: {str(e)}", {"Price": "0"}
