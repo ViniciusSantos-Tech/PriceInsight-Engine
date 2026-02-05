@@ -17,8 +17,8 @@ class IA():
             1. Return ONLY the raw JSON. No markdown blocks (```json), no explanations, no conversational text.
             2. Extract ONLY the single lowest cash price available. Ignore installment prices (parcelas) or total credit prices.
             3. Format: {{"Status": "Success", "Price": "xx.xxx"}}
-            4. Numeric Format: Use ONLY digits and a single period (.) as a decimal separator. Remove currency symbols (R$) and commas (,).
-            - Correct: "xx.xxx"
+            4. Numeric Format: Use ONLY plain digits. NO periods (.), NO commas (,). If the price is 29.909,00, return "29909".
+            - Correct: "xxxxx"
             - Incorrect: "xx.xxx,xx" or "R$ xx.xxx,xx"
             5. If the price cannot be clearly found, return: {{"Status": "Failure", "Price": "None"}}
 
