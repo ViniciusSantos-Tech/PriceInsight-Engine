@@ -1,36 +1,37 @@
-from scrap import Scrap
+from scrap import Scrap, Scrap2
 from ai_processor import IA
 from crud import Crud
 
 print("Phase one----------------")
-app_scrapping = Scrap()
-scrapping_response = app_scrapping.Scraping()
+app_scrap1 = Scrap()
+app_scrap2 = Scrap2()
 
-if "Error" in scrapping_response:
-    print(f"Fail: {scrapping_response}")
+status1, response1 = app_scrap1.scraping_item1()
+status2, response2 = app_scrap2.scraping_item2()
+if not status1 or not status2:
+    print("Error in scraping operation!")
     exit()
-else:
-    print("Sucess!")
+print("Success!")
 
 print("Phase two----------------")
 app_ai = IA()
-msg,response, ai_response = app_ai.analyze_with_ai(scrapping_response)
-ai_sucess, ai_log, dics_dates = app_ai.format_response(ai_response)
-if msg == False:
-    print(response)
-print(ai_response)
 
-if not ai_sucess:
+msg, ai_raw, ai_content = app_ai.analyze_with_ai(response1, response2)
+ai_success, ai_log, items_list = app_ai.format_response(ai_content)
+print(ai_content)
+if not ai_success:
     print(ai_log)
     exit()
 
 print("Phase three----------------")
 app_crud = Crud()
-msg, crud_response = app_crud.add_history(Product="VideoCard", Price=dics_dates["Price"])
-if crud_response == False:
-    print(crud_response)
-print(crud_response)
 
+for item in items_list:
+    product_name = item.get("item")
+    price = item.get("Price")
 
-
-
+    if price and price != "None":
+        success, crud_msg = app_crud.add_history(Product=product_name, Price=price)
+        print(f"Item {product_name}: {crud_msg}")
+    else:
+        print(f"Skipped {product_name}: Price not found.")
