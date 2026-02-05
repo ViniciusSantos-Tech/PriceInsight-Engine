@@ -2,10 +2,10 @@ import pandas as pd
 import streamlit as st
 from database import engine
 import plotly.express as px
+from prevision import PricePredictor
 
 st.set_page_config(page_title='Price Monitor', layout='wide')
 st.title("Price Monitoring Dashboard")
-
 def load_data():
     query = 'SELECT "Id", "Product", "Price", "Date" FROM public."History" ORDER BY "Date" ASC'
     try:
@@ -19,7 +19,6 @@ def load_data():
 df = load_data()
 
 if not df.empty:
-    df["Price"] = df["Price"].astype(str).str.replace('.', '', regex=False)
     df["Price"] = pd.to_numeric(df["Price"], errors='coerce')
     df = df.dropna(subset=["Price"])
     
@@ -38,7 +37,7 @@ if not df.empty:
     fig.update_layout(
         yaxis=dict(
             title="Price (R$)",
-            tickformat=".0f", 
+            tickformat=".3f", 
             range=[df_daily["Price"].min() * 0.98, df_daily["Price"].max() * 1.02]
         ),
         xaxis=dict(tickformat="%d/%m"),
@@ -48,8 +47,12 @@ if not df.empty:
     
     st.plotly_chart(fig, use_container_width=True)
 
-    if st.button("Refresh"):
-        st.cache_data.clear()
-        st.rerun()
+    predictor = PricePredictor()
+    p_drop, p_rise = predictor.calculate_probabilities()
+    
+    st.subheader("Price Prediction")
+    c1, c2 = st.columns(2)
+    c1.metric("Probability to FALL", f"{p_drop}%", delta="- Trend", delta_color="normal")
+    c2.metric("Probability to RISE", f"{p_rise}%", delta="+ Trend", delta_color="inverse")
 else:
     st.warning("No data found.")
