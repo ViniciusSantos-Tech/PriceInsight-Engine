@@ -24,7 +24,7 @@ class Scrap():
      }
     def Scraping(self):
         try:
-            time.sleep(15)
+            time.sleep(2)
             r = requests.get(self.url, headers=self.headers, timeout=10)
             if r.status_code == 200:
                 soup = BeautifulSoup(r.text, 'html.parser')
@@ -37,3 +37,4 @@ class Scrap():
                 return r.status_code
         except: 
             return "unknown error"
+
