@@ -13,43 +13,46 @@ def load_data():
             df = pd.read_sql(query, connection)
             return df
     except Exception as e:
-        st.error(f"Database connection error: {e}")
+        st.error(f"Database error: {e}")
         return pd.DataFrame()
 
 df = load_data()
-
 if not df.empty:
     df["Price"] = pd.to_numeric(df["Price"], errors='coerce')
     df = df.dropna(subset=["Price"])
     df["Date"] = pd.to_datetime(df["Date"])
-    df = df.sort_values(by="Date")
     df["Day"] = df["Date"].dt.date
-    st.subheader("Data Table")
-    st.dataframe(df)
-
-    df_daily = df.groupby("Day")["Price"].mean().reset_index()
-
-    fig = px.line(df_daily, x="Day", y="Price", title="Price Variation")
+    df_daily = df.groupby(["Day", "Product"])["Price"].mean().reset_index()
+    fig = px.line(
+        df_daily, 
+        x="Day", 
+        y="Price", 
+        color="Product",
+        title="Price Variation: RTX 5090 vs RTX 4090",
+        color_discrete_map={"RTX5090": "green", "RTX4090": "blue"},
+        render_mode="svg"
+    )
     fig.update_traces(line_shape="spline", mode="lines+markers")
-
     fig.update_layout(
         yaxis=dict(
-            title="Price (R$)",
-            tickformat=",.0f", 
-            range=[df_daily["Price"].min() * 0.98, df_daily["Price"].max() * 1.02]
+            title="Price (R$)", 
+            tickformat=",.0f",
+            range=[df_daily["Price"].min() * 0.95, df_daily["Price"].max() * 1.05]
         ),
-        xaxis=dict(tickformat="%d/%m"),
+        xaxis=dict(title="Date", tickformat="%d/%m"),
         template="plotly_dark",
         height=500
     )
     st.plotly_chart(fig, use_container_width=True)
 
     predictor = PricePredictor()
-    p_drop, p_rise = predictor.calculate_probabilities()
     
-    st.subheader("Price Prediction")
-    c1, c2 = st.columns(2)
-    c1.metric("Probability to FALL", f"{p_drop}%", delta="- Trend", delta_color="normal")
-    c2.metric("Probability to RISE", f"{p_rise}%", delta="+ Trend", delta_color="inverse")
+    for product in ["RTX5090", "RTX4090"]:
+        st.divider()
+        st.subheader(f"Prediction for {product}")
+        p_drop, p_rise = predictor.calculate_probabilities(product)
+        c1, c2 = st.columns(2)
+        c1.metric("Drop Probability", f"{p_drop}%", delta="- Trend")
+        c2.metric("Rise Probability", f"{p_rise}%", delta="+ Trend", delta_color="inverse")
 else:
-    st.warning("No data found.")
+    st.warning("No data available.")
