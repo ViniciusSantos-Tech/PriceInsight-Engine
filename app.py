@@ -21,11 +21,9 @@ df = load_data()
 if not df.empty:
     df["Price"] = pd.to_numeric(df["Price"], errors='coerce')
     df = df.dropna(subset=["Price"])
-    
     df["Date"] = pd.to_datetime(df["Date"])
     df = df.sort_values(by="Date")
     df["Day"] = df["Date"].dt.date
-
     st.subheader("Data Table")
     st.dataframe(df)
 
@@ -37,14 +35,13 @@ if not df.empty:
     fig.update_layout(
         yaxis=dict(
             title="Price (R$)",
-            tickformat=".3f", 
+            tickformat=",.0f", 
             range=[df_daily["Price"].min() * 0.98, df_daily["Price"].max() * 1.02]
         ),
         xaxis=dict(tickformat="%d/%m"),
         template="plotly_dark",
         height=500
     )
-    
     st.plotly_chart(fig, use_container_width=True)
 
     predictor = PricePredictor()
