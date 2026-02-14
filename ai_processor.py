@@ -8,7 +8,6 @@ load_dotenv()
 
 class IA():
     def __init__(self):
-
         self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
     def analyze_with_ai(self, raw_data1: str, raw_data2: str) -> tuple[bool, str, str]:
@@ -20,6 +19,8 @@ class IA():
             1. Return a JSON LIST with exactly 2 objects.
             2. For each price: Extract only digits. If there are cents, IGNORE them.
             Example: R$ 22.599,99 -> "22599" (NO cents).
+            Correct: RTX5090
+            Wrong: RTX 5090 (NO SPACES)
             3. Format: [
                 {{"item": RTX5090, "Status": "Success", "Price": "xxxxx"}},
                 {{"item": RTX4090, "Status": "Success", "Price": "xxxxx"}}
@@ -44,7 +45,6 @@ class IA():
                 data = json.loads(cleaned)
                 if isinstance(data, dict) and "items" in data:
                     data = data["items"]
-
                 return True, "success", data
             else:
                 raise ValueError("no json found")
