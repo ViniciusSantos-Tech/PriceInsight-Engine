@@ -2,10 +2,12 @@ python-dotenv
 requests
 beautifulsoup4
 groq
-pandas
+streamlit>=1.35.0
+pandas>=2.2.0
+plotly>=5.20.0
+altair<6.0.0 
 numpy
 scikit-learn
 sqlalchemy
 psycopg2-binary
-streamlit
-plotly
+
