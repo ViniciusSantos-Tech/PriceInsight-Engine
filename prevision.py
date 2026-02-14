@@ -7,7 +7,7 @@ class PricePredictor:
     def __init__(self):
         self.model = LinearRegression()
 
-    def getdata(self, product_name):
+    def get_data(self, product_name):
         query = f"SELECT \"Price\", \"Date\" FROM public.\"History\" WHERE \"Product\" = '{product_name}' ORDER BY \"Date\" ASC"
         try:
             with engine.connect() as connection:
@@ -34,4 +34,5 @@ class PricePredictor:
             rise_prob = min(85, 50 + (slope / 10))
             drop_prob = 100 - rise_prob
             
+
         return round(drop_prob, 1), round(rise_prob, 1)
