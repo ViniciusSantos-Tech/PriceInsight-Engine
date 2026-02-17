@@ -50,6 +50,7 @@ if not df.empty:
         height=500,
         plot_bgcolor='rgba(0,0,0,0)', 
         paper_bgcolor='rgba(0,0,0,0)',
+        legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(color="white"))
     )
     
     st.plotly_chart(fig, use_container_width=True)
@@ -64,3 +65,4 @@ if not df.empty:
         c2.metric("Rise Probability", f"{p_rise}%", delta="+ Trend", delta_color="inverse")
 else:
     st.warning("No data available.")
+
