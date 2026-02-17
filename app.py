@@ -6,6 +6,7 @@ from prevision import PricePredictor
 
 st.set_page_config(page_title='Price Monitor', layout='wide')
 st.title("Price Monitoring Dashboard")
+
 def load_data():
     query = 'SELECT "Id", "Product", "Price", "Date" FROM public."History" ORDER BY "Date" ASC'
     try:
@@ -37,14 +38,21 @@ if not df.empty:
         yaxis=dict(
             title="Price (R$)", 
             tickformat=",.0f",
-            range=[df_daily["Price"].min() * 0.95, df_daily["Price"].max() * 1.05]
+            range=[df_daily["Price"].min() * 0.95, df_daily["Price"].max() * 1.05],
+            gridcolor='rgba(255, 255, 255, 0.1)'
         ),
-        xaxis=dict(title="Date", tickformat="%d/%m"),
+        xaxis=dict(
+            title="Date", 
+            tickformat="%d/%m",
+            gridcolor='rgba(255, 255, 255, 0.1)'
+        ),
         template="plotly_dark",
-        height=500
+        height=500,
+        plot_bgcolor='rgba(0,0,0,0)', 
+        paper_bgcolor='rgba(0,0,0,0)',
     )
+    
     st.plotly_chart(fig, use_container_width=True)
-
     predictor = PricePredictor()
     
     for product in ["RTX5090", "RTX4090"]:
